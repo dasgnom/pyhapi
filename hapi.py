@@ -75,8 +75,6 @@ def search_station_by_name():
 
     stat = station.Station(config['network'], accessId)
     stationlist = stat.searchName(name.strip())
-
-    stationlist = json.loads(stationlist)
     noStation = True
 
     for s in stationlist['stopLocationOrCoordLocation']:
@@ -99,7 +97,6 @@ def search_station_by_coordinate():
     stat = station.Station(config['network'], config[config['network']]['accessId'])
     stationlist = stat.searchCoordinate(lat, lon)
 
-    stationlist = json.loads(stationlist)
     noStation = True
 
     if not 'stopLocationOrCoordLocation' in stationlist:
@@ -137,9 +134,7 @@ def select_network():
         exit(30)
 
     set_config_item({'network': choice})
-
-    global network
-    network = choice
+    return True
 
 
 
@@ -149,10 +144,13 @@ if __name__ == '__main__':
         config = get_config()
         if not config:
             select_network()
+            config = get_config()
 
         if 'network' in config:
             print('You are working on network: {}'.format(config['network']))
         network = config['network']
+        if network not in config:
+            config[network] = {}
         if networks.networks[network]['accessId'] == True and 'accessId' not in config[network]:
             accessId = input('Please enter your AccessId: ')
             if not set_accessid(accessId, network):

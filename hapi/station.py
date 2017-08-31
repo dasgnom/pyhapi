@@ -1,4 +1,5 @@
 import requests
+import json
 from . import networks
 
 
@@ -40,8 +41,8 @@ class Station():
             raise ConnectionError from ConnectionError
 
         else:
-            stationList  = data.content
-            return stationList
+            stationList  = data.content.decode('utf-8')
+            return json.loads(stationList)
 
     def searchCoordinate(self, lat, lon, radius=1000):
         """
@@ -71,5 +72,5 @@ class Station():
             raise ConnectionError from ConnectionError
 
         else:
-            stationList = data.content
-            return stationList
+            stationList = data.content.decode('utf-8')
+            return json.loads(stationList)
